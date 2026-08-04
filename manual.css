@@ -1,1 +1,48 @@
+body{
 
+    background:#eef3f8;
+
+}
+
+.main-card{
+
+    max-width:700px;
+    border-radius:18px;
+
+}
+
+.student{
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    margin-bottom:15px;
+
+    transition:.2s;
+
+}
+
+.student:hover{
+
+    box-shadow:0 5px 18px rgba(0,0,0,.12);
+
+}
+
+.name{
+
+    font-size:20px;
+
+    font-weight:bold;
+
+}
+
+.grade{
+
+    color:#777;
+
+    margin-bottom:12px;
+
+}
