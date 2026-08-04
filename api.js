@@ -14,9 +14,7 @@ async function sendAttendance(id){
 async function getAllStudent(){
 
     const response = await fetch(
-
         API_URL + "?action=all"
-
     );
 
     return await response.json();
