@@ -10,7 +10,7 @@ keyword.addEventListener("keyup", () => {
 
     clearTimeout(typingTimer);
 
-    typingTimer = setTimeout(loadStudent, 300);
+    typingTimer = setTimeout(loadStudent, 100);
 
 });
 
