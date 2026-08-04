@@ -11,13 +11,11 @@ async function sendAttendance(id){
 
 }
 
-async function searchStudent(keyword){
+async function getAllStudent(){
 
     const response = await fetch(
 
-        API_URL +
-        "?action=search&keyword=" +
-        encodeURIComponent(keyword)
+        API_URL + "?action=all"
 
     );
 
