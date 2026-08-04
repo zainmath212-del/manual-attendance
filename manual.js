@@ -4,7 +4,15 @@ const result = document.getElementById("result");
 
 keyword.focus();
 
-keyword.addEventListener("keyup", loadStudent);
+let typingTimer;
+
+keyword.addEventListener("keyup", () => {
+
+    clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(loadStudent, 200);
+
+});
 
 async function loadStudent(){
 
