@@ -1,11 +1,52 @@
 const keyword = document.getElementById("keyword");
-
 const result = document.getElementById("result");
 
-keyword.focus();
-
+let allStudents = [];
 let typingTimer;
 
+// Fokus ke textbox
+keyword.focus();
+
+// =============================
+// LOAD SEMUA SISWA (1x SAJA)
+// =============================
+(async () => {
+
+    result.innerHTML = `
+        <div class="text-center text-muted">
+            ⏳ Memuat data siswa...
+        </div>
+    `;
+
+    try {
+
+        allStudents = await getAllStudent();
+
+        result.innerHTML = `
+            <div class="text-center text-success">
+                ✅ ${allStudents.length} siswa siap dicari
+            </div>
+        `;
+
+        setTimeout(() => {
+            result.innerHTML = "";
+        }, 1000);
+
+    } catch (e) {
+
+        result.innerHTML = `
+            <div class="text-danger text-center">
+                Gagal memuat data siswa.
+            </div>
+        `;
+
+    }
+
+})();
+
+// =============================
+// AUTO SEARCH
+// =============================
 keyword.addEventListener("keyup", () => {
 
     clearTimeout(typingTimer);
@@ -14,75 +55,106 @@ keyword.addEventListener("keyup", () => {
 
 });
 
-async function loadStudent(){
+// =============================
+// CARI SISWA
+// =============================
+function loadStudent(){
 
-    const text = keyword.value.trim();
+    const text = keyword.value.trim().toLowerCase();
 
     if(text.length < 2){
 
-        result.innerHTML="";
+        result.innerHTML = "";
 
         return;
 
     }
 
-    const siswa = await searchStudent(text);
+    const siswa = allStudents
+        .filter(s =>
+            s.nama.toLowerCase().includes(text) ||
+            s.id.includes(text)
+        )
+        .slice(0,10);
 
-    let html="";
+    let html = "";
 
-    siswa.forEach(s=>{
+    if(siswa.length == 0){
 
-        html += `
+        html = `
+            <div class="text-center text-muted">
+                Tidak ada siswa ditemukan.
+            </div>
+        `;
 
-<div class="student">
+    }else{
 
-<div class="name">
+        siswa.forEach(s=>{
 
-${s.nama}
+            html += `
 
-</div>
+            <div class="student">
 
-<div class="grade">
+                <div class="name">
+                    ${s.nama}
+                </div>
 
-Grade ${s.kelas}
+                <div class="grade">
+                    Grade ${s.kelas}
+                </div>
 
-</div>
+                <button
+                    class="btn btn-success"
+                    onclick="submitAttendance('${s.id}')">
 
-<button
-class="btn btn-primary"
-onclick="submitAttendance('${s.id}')">
+                    ✓ Submit Attendance
 
-Submit Attendance
+                </button>
 
-</button>
+            </div>
 
-</div>
+            `;
 
-`;
+        });
 
-    });
+    }
 
     result.innerHTML = html;
 
 }
 
+// =============================
+// SUBMIT
+// =============================
 async function submitAttendance(id){
 
     const hasil = await sendAttendance(id);
 
     if(hasil.success){
 
-        alert("✅ Attendance Recorded");
+        result.innerHTML = `
+            <div class="alert alert-success">
+                ✅ Attendance Recorded
+            </div>
+        `;
 
-        keyword.value="";
-
-        result.innerHTML="";
+        keyword.value = "";
 
         keyword.focus();
 
+        setTimeout(()=>{
+
+            result.innerHTML = "";
+
+        },1200);
+
     }else{
 
-        alert(hasil.message);
+        result.innerHTML = `
+            <div class="alert alert-danger">
+                ${hasil.message}
+            </div>
+        `;
 
     }
 
