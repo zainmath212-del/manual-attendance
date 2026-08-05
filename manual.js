@@ -171,7 +171,7 @@ async function submitAttendance(id, btn){
 
             btn.closest(".student").style.opacity="1";
 
-            alert(hasil.message);
+            showMessage("❌ " + hasil.message, "danger");
 
         }
 
@@ -187,4 +187,18 @@ async function submitAttendance(id, btn){
 
     }
 
+}
+function showMessage(text, type = "success") {
+
+    const box = document.getElementById("message");
+
+    box.innerHTML = `
+        <div class="alert alert-${type}" role="alert">
+            ${text}
+        </div>
+    `;
+
+    setTimeout(() => {
+        box.innerHTML = "";
+    }, 3000);
 }
