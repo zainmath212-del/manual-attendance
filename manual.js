@@ -171,7 +171,14 @@ async function submitAttendance(id, btn){
 
             btn.closest(".student").style.opacity="1";
 
-            showMessage("❌ " + hasil.message, "danger");
+            document.getElementById("errorToastText").innerHTML = "❌ " + hasil.message;
+
+new bootstrap.Toast(
+    document.getElementById("errorToast"),
+    {
+        delay:2500
+    }
+).show();
 
         }
 
@@ -183,22 +190,15 @@ async function submitAttendance(id, btn){
 
         btn.closest(".student").style.opacity="1";
 
-        alert("Gagal mengirim attendance.");
+        document.getElementById("errorToastText").innerHTML = "❌ Gagal mengirim attendance.";
+
+new bootstrap.Toast(
+    document.getElementById("errorToast"),
+    {
+        delay:2500
+    }
+).show();
 
     }
 
-}
-function showMessage(text, type = "success") {
-
-    const box = document.getElementById("message");
-
-    box.innerHTML = `
-        <div class="alert alert-${type}" role="alert">
-            ${text}
-        </div>
-    `;
-
-    setTimeout(() => {
-        box.innerHTML = "";
-    }, 3000);
 }
