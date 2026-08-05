@@ -104,9 +104,9 @@ function loadStudent(){
                 </div>
 
                 <button
-    id="btn-${s.id}"
-    class="btn btn-success"
-    onclick="submitAttendance('${s.id}')">
+id="btn-${s.id}"
+class="btn btn-success"
+onclick="submitAttendance('${s.id}',this)">
 
     ✓ Submit Attendance
 
@@ -127,13 +127,19 @@ function loadStudent(){
 // =============================
 // SUBMIT
 // =============================
-async function submitAttendance(id){
+async function submitAttendance(id, btn){
 
-    const btn = document.getElementById("btn-" + id);
+    // cegah double click
+    if(btn.disabled) return;
 
-    // Disable tombol
     btn.disabled = true;
-    btn.innerHTML = "⏳ Submitting...";
+
+    btn.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Recording...
+    `;
+
+    btn.closest(".student").style.opacity = ".6";
 
     try{
 
@@ -141,44 +147,43 @@ async function submitAttendance(id){
 
         if(hasil.success){
 
-            result.innerHTML = `
-                <div class="alert alert-success">
-                    ✅ Attendance Recorded
-                </div>
-            `;
+            const toast =
+                new bootstrap.Toast(
+                    document.getElementById("successToast"),
+                    {
+                        delay:1500
+                    }
+                );
 
-            keyword.value = "";
+            toast.show();
+
+            keyword.value="";
+
+            result.innerHTML="";
+
             keyword.focus();
-
-            setTimeout(()=>{
-
-                result.innerHTML = "";
-
-            },1200);
 
         }else{
 
-            btn.disabled = false;
-            btn.innerHTML = "✓ Submit Attendance";
+            btn.disabled=false;
 
-            result.innerHTML = `
-                <div class="alert alert-danger">
-                    ${hasil.message}
-                </div>
-            `;
+            btn.innerHTML="✓ Submit Attendance";
+
+            btn.closest(".student").style.opacity="1";
+
+            alert(hasil.message);
 
         }
 
-    }catch(e){
+    }catch(err){
 
-        btn.disabled = false;
-        btn.innerHTML = "✓ Submit Attendance";
+        btn.disabled=false;
 
-        result.innerHTML = `
-            <div class="alert alert-danger">
-                Gagal mengirim attendance.
-            </div>
-        `;
+        btn.innerHTML="✓ Submit Attendance";
+
+        btn.closest(".student").style.opacity="1";
+
+        alert("Gagal mengirim attendance.");
 
     }
 
