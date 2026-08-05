@@ -104,12 +104,13 @@ function loadStudent(){
                 </div>
 
                 <button
-                    class="btn btn-success"
-                    onclick="submitAttendance('${s.id}')">
+    id="btn-${s.id}"
+    class="btn btn-success"
+    onclick="submitAttendance('${s.id}')">
 
-                    ✓ Submit Attendance
+    ✓ Submit Attendance
 
-                </button>
+</button>
 
             </div>
 
@@ -128,31 +129,54 @@ function loadStudent(){
 // =============================
 async function submitAttendance(id){
 
-    const hasil = await sendAttendance(id);
+    const btn = document.getElementById("btn-" + id);
 
-    if(hasil.success){
+    // Disable tombol
+    btn.disabled = true;
+    btn.innerHTML = "⏳ Submitting...";
 
-        result.innerHTML = `
-            <div class="alert alert-success">
-                ✅ Attendance Recorded
-            </div>
-        `;
+    try{
 
-        keyword.value = "";
+        const hasil = await sendAttendance(id);
 
-        keyword.focus();
+        if(hasil.success){
 
-        setTimeout(()=>{
+            result.innerHTML = `
+                <div class="alert alert-success">
+                    ✅ Attendance Recorded
+                </div>
+            `;
 
-            result.innerHTML = "";
+            keyword.value = "";
+            keyword.focus();
 
-        },1200);
+            setTimeout(()=>{
 
-    }else{
+                result.innerHTML = "";
+
+            },1200);
+
+        }else{
+
+            btn.disabled = false;
+            btn.innerHTML = "✓ Submit Attendance";
+
+            result.innerHTML = `
+                <div class="alert alert-danger">
+                    ${hasil.message}
+                </div>
+            `;
+
+        }
+
+    }catch(e){
+
+        btn.disabled = false;
+        btn.innerHTML = "✓ Submit Attendance";
 
         result.innerHTML = `
             <div class="alert alert-danger">
-                ${hasil.message}
+                Gagal mengirim attendance.
             </div>
         `;
 
